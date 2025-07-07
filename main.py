@@ -1,3 +1,4 @@
+import json
 def display_favs(favorites):
     return "Your favorites:\n" + "\n".join(f"{cat}: {fav}" for cat, fav in favorites.items())
 
