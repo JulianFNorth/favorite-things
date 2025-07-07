@@ -1,11 +1,5 @@
-favorites = {
-    "dog": "Retriever",
-    "place": "My house",
-    "food": "Pizza"
-}
-
 def display_favs(favorites):
-    return f"Your favorite categories are: {', '.join(favorites)}"
+    return "Your favorites:\n" + "\n".join(f"{cat}: {fav}" for cat, fav in favorites.items())
 
 def type_category(favorites):
     category = ''
@@ -24,6 +18,27 @@ def new_category(favorites):
     if choice.lower() in ['y', 'yes']:
         add_category(favorites)
 
+def update_fav(favorites):
+    cat = ''
+    while cat not in favorites:
+        cat = input("What is the category? ")
+        if cat not in favorites:
+            print("Category not found!\n")
+
+    fav = input("What is your new favorite? ")
+    favorites[cat] = fav
+    print("Updated!")
+
+def delete_fav(favorites):
+    cat = ''
+    while cat not in favorites:
+        cat = input("What is the category? ")
+        if cat not in favorites:
+            print("Category not found!\n")
+
+    del favorites[cat]
+    print("Deleted!")
+
 def add_category(favorites):
     cat = input("What is your new category? ")
     fav = input("What is your favorite? ")
@@ -37,15 +52,31 @@ def add_category(favorites):
     return favorites
 
 def main():
-    print("Welcome to Julian's Fav Tracker!")
-    print(display_favs(favorites))
-    
-    print("\n--- View a Category ---")
-    print(type_category(favorites))
-    
-    print("\n--- Add a New Category ---")
-    new_category(favorites)
+    playing = True
+    with open ("favorites.json", "r") as favorites:
+        favorites = json.load(favorites)
 
-    print("\nSee your later!")
+    while True:
+        print("\nWhat would you like to do?")
+        print("Options: lookup / add / update / delete / show / quit")
+        choice = input("Enter your choice: ").lower()
+
+        if choice == 'lookup':
+            print(type_category(favorites))
+        elif choice == 'add':
+            new_category(favorites)
+        elif choice == 'update':
+            update_fav(favorites)
+        elif choice == 'delete':
+            delete_fav(favorites)
+        elif choice == 'show':
+            print(display_favs(favorites))
+        elif choice == 'quit':
+            print("See you later!")
+            break
+        else:
+            print("Invalid option. Please try again.")
+    with open ("favorites.json", "w") as file:
+        json.dump(favorites, file)
 
 main()
